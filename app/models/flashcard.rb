@@ -1,4 +1,3 @@
 class Flashcard < ApplicationRecord
-  has_many :language_flashcards
-  has_many :languages, through: :language_flashcards
+  belongs_to :flashcard_set
 end

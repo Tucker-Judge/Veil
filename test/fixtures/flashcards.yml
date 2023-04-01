@@ -1,15 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  genre: MyString
-  cover_info: 
+  flashcard_set: one
   front: MyString
   back: 
-  language: one
+  type: 
+  title: MyString
 
 two:
-  genre: MyString
-  cover_info: 
+  flashcard_set: two
   front: MyString
   back: 
-  language: two
+  type: 
+  title: MyString

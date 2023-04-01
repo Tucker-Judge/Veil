@@ -7,7 +7,6 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :password_digest
       t.string :lang_code
 
-      t.timestamps
     end
   end
 end
