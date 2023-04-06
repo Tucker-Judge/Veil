@@ -1,9 +1,25 @@
 
+
 luke = User.create(name: "Luke", lang_code: "en-US", password: "123", username: "mvp", email: "mvp@example.com")
 #email must be a valid email address
-germanlang = Language.create(language: "German")
-frenchlang = Language.create(language: "French")
-englishlang = Language.create(language: "English")
+# Seed languages
+germanlang = Language.create
+frenchlang = Language.create
+englishlang = Language.create
+
+# Set language translations
+I18n.with_locale(:en) { germanlang.language = "German" }
+I18n.with_locale(:fr) { germanlang.language = "Allemand" }
+germanlang.save!
+
+I18n.with_locale(:en) { frenchlang.language = "French" }
+I18n.with_locale(:de) { frenchlang.language = "Französisch" }
+frenchlang.save!
+
+I18n.with_locale(:fr) { englishlang.language = "Anglais" }
+I18n.with_locale(:de) { englishlang.language = "Englisch" }
+englishlang.save!
+
 
 germanwords = Userlang.create(user_id: luke.id, language_id: germanlang.id)
 englishwords = Userlang.create(user_id: luke.id, language_id: englishlang.id)
@@ -14,11 +30,14 @@ frenchwords = Userlang.create(user_id: luke.id, language_id: frenchlang.id)
 # # Create German language record
 
 
-# # Create flashcards
-FlashcardSet.create(language: germanlang)
-Flashcard.create(front: "der", back: {"en-US": "the", "fr-FR": "le/la"}, type: "Common Words", title: "First 10")
-Flashcard.create(front: "und", back: {"en-US": "and", "fr-FR": "et"}, type: "Common Words", title: "First 10")
-Flashcard.create(front: "sein", back: {"en-US": "to be", "fr-FR": "être"},type: "Common Words", title: "First 10")
+# # Create flashcardscard_
+frequency =FlashcardSet.create(language: germanlang, card_type: "Common Words", title: "First 10")
+
+
+
+# Flashcard.create(flashcard_set_id: frequency.id, front: "der", back: {"en-US": "the", "fr-FR": "le/la"})
+Flashcard.create(flashcard_set_id: frequency.id, front: "und", back: {"en-US": "and", "fr-FR": "et"})
+Flashcard.create(flashcard_set_id: frequency.id, front: "sein", back: {"en-US": "to be", "fr-FR": "être"})
 # Flashcard.create(front: "in", back: {"en-US": "in", "fr-FR": "dans"})
 # Flashcard.create(front: "ein", back: {"en-US": "a/an", "fr-FR": "un/une"})
 # Flashcard.create(front: "zu", back: {"en-US": "to", "fr-FR": "à"})

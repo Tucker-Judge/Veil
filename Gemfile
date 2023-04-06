@@ -34,7 +34,10 @@ gem "bcrypt"
 
 
 gem "serializer", "~> 1.0"
-
 gem "byebug", "~> 11.1"
-
 gem "rack-cors", "~> 2.0"
+# gem "kaminari"
+gem "will_paginate"
+gem "mobility"
+
+

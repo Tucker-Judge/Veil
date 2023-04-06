@@ -1,4 +1,5 @@
 class FlashcardSetSerializer < ActiveModel::Serializer
-  attributes :id, :completed, :type, :title
-  has_one :language
+  attributes :id, :completed, :review_count, :card_type, :title
+  # has_one :language
+  has_many :flashcards
 end
