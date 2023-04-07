@@ -39,5 +39,6 @@ gem "rack-cors", "~> 2.0"
 # gem "kaminari"
 gem "will_paginate"
 gem "mobility"
-
+gem 'sidekiq'
+gem 'redis'
 

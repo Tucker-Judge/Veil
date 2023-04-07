@@ -1,5 +1,6 @@
 class FlashcardSetsController < ApplicationController
     before_action :find_flashcard_set, only: :update
+    before_action :find_language, except: :update
     # accepting serializer custom method of flashcard that has the flashcardset id
     def update
         # Update completed
@@ -11,21 +12,18 @@ class FlashcardSetsController < ApplicationController
             end
         # Update review_count
         else
-            if @set.increment!(:review_count)
-            
+            if @set.increment!(:review_count) 
             render json: @set, status: :ok
             else
             render json: { error: "Failed to increment review_count" }, status: :unprocessable_entity
             end
         end
     end
-    
-    # expecting limits included in user content
+  
     def continue
-        limit = params[:limit] || 10
-        
         # find last updated and add one
-        flashcard_set = FlashcardSet.find_by(completed: false, card_type: params[:card_type])
+        language = Language.find(params[:language])
+        flashcard_set = language.flashcard_sets.find_by(completed: false, card_type: params[:card_type])
         
         if flashcard_set.present?
           render json: flashcard_set, status: :ok
@@ -42,7 +40,9 @@ class FlashcardSetsController < ApplicationController
       # background worker can create public cards for other users
         # optimization super necessary
         # flashcard set including flashcards
+        language = Language.find(params[:language])
         content = FlashcardSet.where(completed: true)
+        # filter options
         if content.exists?
             render json: content, lang_code: lang_code, status: :ok
         else
@@ -51,9 +51,7 @@ class FlashcardSetsController < ApplicationController
     end
 
     def titles
-     
       begin
-        
         page = 1
         per_page = (params[:per_page].presence || 10).to_i
         card_type = params[:card_type]
@@ -107,8 +105,7 @@ class FlashcardSetsController < ApplicationController
       } 
       render json: response_data
         rescue StandardError => e
-          puts "Error: #{e.message}"
-  puts e.backtrace
+          
             render json: {error: e.message}, status: :unprocessable_entity
     end
 
@@ -119,5 +116,10 @@ class FlashcardSetsController < ApplicationController
     @set = FlashcardSet.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: "FlashcardSet not found" }, status: :not_found
+  end
+  def find_language
+    language = Language.find(params[:language])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Language not found" }, status: :not_found
   end
 end
