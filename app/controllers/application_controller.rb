@@ -19,6 +19,7 @@
         def lang_code
          @current_user.lang_code
         end
+        
 
         def render_unprocessable_entity_response(exception)
           render json: { errors: exception.record.errors.full_messages }, status: :unprocessable_entity

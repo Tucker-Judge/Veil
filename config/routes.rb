@@ -9,11 +9,12 @@ Rails.application.routes.draw do
   #user
    post "/signup", to: "users#create"
    get "/me", to: "users#me"
+   get "/profile", to: "users#me"
    post "/login", to: "sessions#create"
    delete "/logout", to: "sessions#destroy"
-   get "/profile", to: "users#me"
-
-  #  flashcard set
+   post "/validate", to: "sessions#validate"
+   
+   #  flashcard set
   get "/continue", to: "flashcard_sets#continue"
   get "/review_content", to: "flashcard_sets#review_content"
   get "/titles", to: "flashcard_sets#titles"

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Welcome to My Awesome Site, <%= @user.name %>!</h1>
+    <p>
+      We're excited to have you join us. To get started, click the link below to confirm your email address and complete the registration process.
+    </p>
+    <%= link_to 'Confirm Email', confirm_email_url(@user.confirmation_token) %>
+  </body>
+</html>
