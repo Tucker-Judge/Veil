@@ -12,11 +12,11 @@ class UsersController < ApplicationController
     end
 
     def create
-        user = User.new(user_params)
+        @user = User.new(user_params)
           
-        if user.save
+        if @user.save
               # Send a confirmation email
-              UserMailer.welcome_email(user).deliver_now
+              UserMailer.welcome_email(@user).deliver_now
               render json: { message: 'User created' }, status: :created
         else
               render json: { error: 'Unable to create user' }, status: :unprocessable_entity

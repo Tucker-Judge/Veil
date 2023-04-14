@@ -55,9 +55,9 @@ config.action_mailer.smtp_settings = {
   address: 'smtp.mail.yahoo.com',
   port: 587,
   domain: 'yahoo.com',
-  user_name: 'tucker.judge@yahoo.com',
-  password: 'dont wanna',
-  authentication: 'plain',
+  user_name: Rails.application.secrets.yahoo_email,
+  password: Rails.application.secrets.yahoo_app_password,
+  authentication: 'login',
   enable_starttls_auto: true
 }
 

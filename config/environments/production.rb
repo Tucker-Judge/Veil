@@ -69,11 +69,11 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 config.action_mailer.delivery_method = :smtp
 config.action_mailer.smtp_settings = {
-  address: 'tucker.judge@yahoo.com',
+  address: 'smtp.mail.yahoo.com',
   port: 587,
   domain: 'yahoo.com',
-  user_name: 'tucker.judge',
-  password: 'dont wanna',
+  user_name: Rails.application.secrets.yahoo_email,
+  password: Rails.application.secrets.yahoo_app_password,
   authentication: 'plain',
   enable_starttls_auto: true
 }
