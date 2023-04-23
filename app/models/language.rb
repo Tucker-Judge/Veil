@@ -4,9 +4,9 @@ class Language < ApplicationRecord
     has_many :flashcard_sets
 
     include Mobility
-    translates :language, type: :text, backend: :key_value, fallbacks: {
+    translates :language, backend: :key_value, type: :text, fallbacks: {
         # fallbacks
-        en: [],
+        en: [:fr],
         de: [:en],
         fr: [:en]
     }

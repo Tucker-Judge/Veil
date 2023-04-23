@@ -1,11 +1,23 @@
 
 
-luke = User.create(name: "Luke", lang_code: "en-US", password: "123", username: "mvp", email: "mvp@example.com")
+tucker = User.new
+tucker.email = "tucker.judge@yahoo.com"
+tucker.password = "123456"
+tucker.password_confirmation = "123456"
+tucker.lang_code = "en-US"
+tucker.save!
+luke = User.new
+luke.email = "test@example.com"
+luke.password = "123456"
+luke.password_confirmation = "123456"
+luke.lang_code = "fr-FR"
+luke.save!
 #email must be a valid email address
+
 # Seed languages
 germanlang = Language.create
-frenchlang = Language.create
 englishlang = Language.create
+frenchlang = Language.create
 
 # Set language translations
 I18n.with_locale(:en) { germanlang.language = "German" }
@@ -31,13 +43,35 @@ frenchwords = Userlang.create(user_id: luke.id, language_id: frenchlang.id)
 
 
 # # Create flashcardscard_
-frequency =FlashcardSet.create(language: germanlang, card_type: "Common Words", title: "First 10")
+frequency =FlashcardSet.create(language_id: germanlang.id, card_type: "Common Words", title: "First 10")
+frequency = FlashcardSet.create(language: germanlang)
+Mobility.with_locale(:en) do
+  frequency.title = "First 10"
+  frequency.card_type = "Common Words"
+end
+Mobility.with_locale(:fr) do
+  frequency.title = "Premier 10"
+  frequency.card_type = "Mots communs"
+end
+frequency.save
+
+# Repeat for each flashcard
+flashcard = Flashcard.new(flashcard_set_id: frequency.id, front: "und")
+Mobility.with_locale(:en) { flashcard.back = "and" }
+Mobility.with_locale(:fr) { flashcard.back = "et" }
+flashcard.save
+
+flashcard = Flashcard.new(flashcard_set_id: frequency.id, front: "sein")
+Mobility.with_locale(:en) { flashcard.back = "to be" }
+Mobility.with_locale(:fr) { flashcard.back = "être" }
+flashcard.save
 
 
 
 # Flashcard.create(flashcard_set_id: frequency.id, front: "der", back: {"en-US": "the", "fr-FR": "le/la"})
-Flashcard.create(flashcard_set_id: frequency.id, front: "und", back: {"en-US": "and", "fr-FR": "et"})
-Flashcard.create(flashcard_set_id: frequency.id, front: "sein", back: {"en-US": "to be", "fr-FR": "être"})
+# 2 below done
+# Flashcard.create(flashcard_set_id: frequency.id, front: "und", back: {"en-US": "and", "fr-FR": "et"})
+# Flashcard.create(flashcard_set_id: frequency.id, front: "sein", back: {"en-US": "to be", "fr-FR": "être"})
 # Flashcard.create(front: "in", back: {"en-US": "in", "fr-FR": "dans"})
 # Flashcard.create(front: "ein", back: {"en-US": "a/an", "fr-FR": "un/une"})
 # Flashcard.create(front: "zu", back: {"en-US": "to", "fr-FR": "à"})

@@ -1,18 +1,20 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for 'User', at: 'auth'
+
   # filter out routes
   resources :flashcards
   resources :flashcard_sets
   resources :userlangs
   resources :languages
-  resources :users
+
   
   #user
-   post "/signup", to: "users#create"
-   get "/me", to: "users#me"
-   get "/profile", to: "users#me"
-   post "/login", to: "sessions#create"
-   delete "/logout", to: "sessions#destroy"
-   post "/validate", to: "sessions#validate"
+  #  post "/signup", to: "users#create"
+  #  get "/me", to: "users#me"
+  #  get "/profile", to: "users#me"
+  #  post "/login", to: "sessions#create"
+  #  delete "/logout", to: "sessions#destroy"
+  #  post "/validate", to: "sessions#validate"
    
    #  flashcard set
   get "/continue", to: "flashcard_sets#continue"
