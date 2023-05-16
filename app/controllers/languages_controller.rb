@@ -1,5 +1,5 @@
 class LanguagesController < ApplicationController
-# skip_before_action :authorize, only: [:index]
+before_action :authenticate_user!
     def index
         languages = Language.all
         if languages.empty?

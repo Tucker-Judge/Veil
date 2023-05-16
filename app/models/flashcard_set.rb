@@ -9,4 +9,5 @@ class FlashcardSet < ApplicationRecord
         de: [:en],
         fr: [:en]
     }
+    
 end

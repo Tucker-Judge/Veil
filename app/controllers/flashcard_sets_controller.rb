@@ -1,6 +1,7 @@
 class FlashcardSetsController < ApplicationController
     before_action :find_flashcard_set, only: :update
-    before_action :find_language, except: :update
+
+    # before_action :find_language, except: :update
     # accepting serializer custom method of flashcard that has the flashcardset id
     def update
         # Update completed
@@ -28,7 +29,7 @@ class FlashcardSetsController < ApplicationController
         if flashcard_set.present?
           render json: flashcard_set, status: :ok
         else
-          render json: { error: "Failed to render flashcard set" }, status: :unprocessable_entity
+          render json: {data: []}, status: :ok
         end
       end
       
@@ -41,72 +42,84 @@ class FlashcardSetsController < ApplicationController
         # optimization super necessary
         # flashcard set including flashcards
         language = Language.find(params[:language])
-        content = FlashcardSet.where(completed: true)
+        content = language.flashcard_sets.where(completed: true)
         # filter options
         if content.exists?
-            render json: content, lang_code: lang_code, status: :ok
+            render json: content, status: :ok
         else
-            render json: { error: "Failed to render review content" }, status: :unprocessable_entity
+            render json: [], status: :ok
         end
     end
 
+    # iterate thorugh pages if all completed page +1
+    # if +1 doesnt exist stop
     def titles
       begin
         page = 1
+        # byebug
         per_page = (params[:per_page].presence || 10).to_i
-        card_type = params[:card_type]
+        card_types = params[:card_type]
         language = Language.find(params[:language])
-       
-        uncompleted_title = language.flashcard_sets.where(card_type: card_type, completed: false).first
+        puts card_types
+        puts language
         
-   
+        all_titles = language.flashcard_sets.i18n.where(card_type: card_types).order(:id)
+    
+        first_uncompleted = all_titles.find_by(completed: false)
         if params[:page].present?
           page = params[:page].to_i
-        elsif uncompleted_title.present?
-          page = (uncompleted_title.id / per_page.to_f).ceil
-        else
-          @last_page ||= language.flashcard_sets.where(card_type: card_type).count
-          page = @last_page
+        elsif first_uncompleted.present?
+          
+          index = all_titles.count {|title| title.id > first_uncompleted.id}
+          page = (index / per_page.to_f).ceil
         end
-        #  want to set page to the total amount
-        #  instance var for last completed
-
-        # continue takes it from last updated
-        titles = FlashcardSet.where(card_type: card_type).select(:id, :title).paginate(page: page, per_page: per_page).order(:id)
-        total_title_pages = (titles.count / per_page.to_f).ceil
+    
+        titles = all_titles.paginate(page: page, per_page: per_page)
+        total_title_pages = (all_titles.count / per_page.to_f).ceil
+    
         response_data = {
           data: ActiveModelSerializers::SerializableResource.new(titles, each_serializer: FlashcardSetTitlesSerializer),
           meta: {
-          total_pages: total_title_pages,
-          current_page: page
+            total_title_pages: total_title_pages,
+            current_titles_page: page
           }
         }
-      render json: response_data
-
+        render json: response_data
+    
       rescue StandardError => e
         render json: { error: e.message }, status: :unprocessable_entity
       end
     end
     
+    # eventually render completed titles % within
+
+    # hacky solution
+    # iterate through all records and return only unique values
     def types
-      # byebug
-      page = params[:page] || 1
-      per_page = params[:per_page] || 10
-      language = Language.find(params[:language])
-      @total_type_pages ||= (language.flashcard_sets.select(:card_type).distinct.count.to_f / per_page).ceil
-      
-      card_types = FlashcardSet.select(:id, :title).distinct(:card_type).paginate(page: page, per_page: per_page).order(:id)
+      page = types_params[:page] || 1
+      per_page = types_params[:per_page] || 10
+      language = Language.find(types_params[:language])
+    
+      card_types = FlashcardSet.where(language_id: types_params[:language]).select(:id, :card_type, :completed).group(:id, :card_type)
+    
+      filtered_card_types = card_types.uniq { |card| card.card_type }
+    
+      paginated_card_types = filtered_card_types.slice((page.to_i - 1) * per_page.to_i, per_page.to_i)
+    
+      @total_type_pages ||= (filtered_card_types.count.to_f / per_page.to_i).ceil
+    
       response_data = {
-        data: ActiveModelSerializers::SerializableResource.new(card_types, each_serializer: FlashcardSetTitlesSerializer),
+        data: ActiveModelSerializers::SerializableResource.new(paginated_card_types, each_serializer: FlashcardSetsTypesSerializer),
         meta: {
           total_type_pages: @total_type_pages,
           current_page: page
         }
-      } 
+      }
+    
       render json: response_data
-        rescue StandardError => e
-          
-            render json: {error: e.message}, status: :unprocessable_entity
+    
+      rescue StandardError => e
+        render json: {error: e.message}, status: :unprocessable_entity
     end
 
 
@@ -121,5 +134,8 @@ class FlashcardSetsController < ApplicationController
     language = Language.find(params[:language])
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Language not found" }, status: :not_found
+  end
+  def types_params
+    params.permit(:language, :page, :per_page)
   end
 end

@@ -1,3 +1,3 @@
 class FlashcardSetsTypesSerializer < ActiveModel::Serializer
-  attributes :id, :type
+  attributes :id, :card_type, :completed
 end

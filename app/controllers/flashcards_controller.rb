@@ -1,12 +1,12 @@
 class FlashcardsController < ApplicationController
 
-    def show
+    def index
         limit = params[:limit]||10
         # have to do id here
-        flashcards = Flashcard.where(id: params[:id])
+        flashcards = FlashcardSet.find(params[:id]).flashcards
 
         if flashcards.any? 
-            render json: flashcards, lang_code: @lang_code
+            render json: flashcards
         else
             render json: {error: "Flashcards not found"}, status: :not_found
         end

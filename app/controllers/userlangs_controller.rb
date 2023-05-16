@@ -4,6 +4,8 @@ class UserlangsController < ApplicationController
         languages = current_user.languages
         if languages
             render json: languages, status: :ok
+        elsif languages.empty?
+          render json: {error: 'No languages'}
         else 
             return render json: { errors: language.errors_full_messages }, status: :unprocessable_entity
         end

@@ -470,3 +470,216 @@ FOREIGN KEY ("user_id")
   [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "a11213e5d60455c95afc08c0c689d43eb88227cc"], ["created_at", "2023-04-22 13:57:02.501462"], ["updated_at", "2023-04-22 13:57:02.501462"]]
   [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
   [1m[36mActiveRecord::SchemaMigration Pluck (1.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (232.3ms)[0m  [1m[35mDROP DATABASE IF EXISTS "react_rails_api_project_template_test"[0m
+  [1m[35m (437.3ms)[0m  [1m[35mCREATE DATABASE "react_rails_api_project_template_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "flashcard_sets" CASCADE[0m
+  [1m[35m (33.3ms)[0m  [1m[35mCREATE TABLE "flashcard_sets" ("id" bigserial primary key, "language_id" bigint NOT NULL, "completed" boolean DEFAULT FALSE NOT NULL, "review_count" integer DEFAULT 0 NOT NULL, "card_type" character varying, "title" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.9ms)[0m  [1m[35mCREATE INDEX "index_flashcard_sets_on_language_id" ON "flashcard_sets" ("language_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "flashcards" CASCADE[0m
+  [1m[35m (9.0ms)[0m  [1m[35mCREATE TABLE "flashcards" ("id" bigserial primary key, "flashcard_set_id" bigint NOT NULL, "front" character varying, "back" jsonb, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE INDEX "index_flashcards_on_flashcard_set_id" ON "flashcards" ("flashcard_set_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "languages" CASCADE[0m
+  [1m[35m (14.3ms)[0m  [1m[35mCREATE TABLE "languages" ("id" bigserial primary key, "language" character varying)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobility_string_translations" CASCADE[0m
+  [1m[35m (7.3ms)[0m  [1m[35mCREATE TABLE "mobility_string_translations" ("id" bigserial primary key, "locale" character varying NOT NULL, "key" character varying NOT NULL, "value" character varying, "translatable_type" character varying, "translatable_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (3.1ms)[0m  [1m[35mCREATE INDEX "index_mobility_string_translations_on_translatable_attribute" ON "mobility_string_translations" ("translatable_id", "translatable_type", "key")[0m
+  [1m[35m (4.6ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobility_string_translations_on_keys" ON "mobility_string_translations" ("translatable_id", "translatable_type", "locale", "key")[0m
+  [1m[35m (20.3ms)[0m  [1m[35mCREATE INDEX "index_mobility_string_translations_on_query_keys" ON "mobility_string_translations" ("translatable_type", "key", "value", "locale")[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobility_text_translations" CASCADE[0m
+  [1m[35m (9.5ms)[0m  [1m[35mCREATE TABLE "mobility_text_translations" ("id" bigserial primary key, "locale" character varying NOT NULL, "key" character varying NOT NULL, "value" text, "translatable_type" character varying, "translatable_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE INDEX "index_mobility_text_translations_on_translatable_attribute" ON "mobility_text_translations" ("translatable_id", "translatable_type", "key")[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobility_text_translations_on_keys" ON "mobility_text_translations" ("translatable_id", "translatable_type", "locale", "key")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "userlangs" CASCADE[0m
+  [1m[35m (2.2ms)[0m  [1m[35mCREATE TABLE "userlangs" ("id" bigserial primary key, "user_id" bigint NOT NULL, "language_id" bigint NOT NULL, "learning" boolean DEFAULT TRUE)[0m
+  [1m[35m (19.9ms)[0m  [1m[35mCREATE INDEX "index_userlangs_on_language_id" ON "userlangs" ("language_id")[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE INDEX "index_userlangs_on_user_id" ON "userlangs" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (6.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "provider" character varying DEFAULT 'email' NOT NULL, "uid" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp(6), "allow_password_change" boolean DEFAULT FALSE, "remember_created_at" timestamp(6), "confirmation_token" character varying, "confirmed_at" timestamp(6), "confirmation_sent_at" timestamp(6), "email" character varying, "lang_code" character varying, "tokens" json, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_confirmation_token" ON "users" ("confirmation_token")[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35m (7.7ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_uid_and_provider" ON "users" ("uid", "provider")[0m
+  [1m[35m (29.4ms)[0m  [1m[35mALTER TABLE "flashcard_sets" ADD CONSTRAINT "fk_rails_dea8b4402e"
+FOREIGN KEY ("language_id")
+  REFERENCES "languages" ("id")
+[0m
+  [1m[35m (1.2ms)[0m  [1m[35mALTER TABLE "flashcards" ADD CONSTRAINT "fk_rails_2030aabf31"
+FOREIGN KEY ("flashcard_set_id")
+  REFERENCES "flashcard_sets" ("id")
+[0m
+  [1m[35m (12.3ms)[0m  [1m[35mALTER TABLE "userlangs" ADD CONSTRAINT "fk_rails_7bd0bde5da"
+FOREIGN KEY ("language_id")
+  REFERENCES "languages" ("id")
+[0m
+  [1m[35m (2.8ms)[0m  [1m[35mALTER TABLE "userlangs" ADD CONSTRAINT "fk_rails_290b2e4f16"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (7.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (5.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20230403052736)[0m
+  [1m[35m (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20230322142045),
+(20230401065848),
+(20230401070526),
+(20230401074510),
+(20230401082404),
+(20230403052735);
+
+[0m
+  [1m[35m (3.5ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.9ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2023-04-24 16:05:18.641947"], ["updated_at", "2023-04-24 16:05:18.641947"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "c16743ff394d866a917283497372b5b2498a02b3"], ["created_at", "2023-04-24 16:05:18.649469"], ["updated_at", "2023-04-24 16:05:18.649469"]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (4.4ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (1.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (53.8ms)[0m  [1m[35mDROP DATABASE IF EXISTS "react_rails_api_project_template_test"[0m
+  [1m[35m (236.2ms)[0m  [1m[35mCREATE DATABASE "react_rails_api_project_template_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (21.6ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (22.9ms)[0m  [1m[35mDROP TABLE IF EXISTS "flashcard_sets" CASCADE[0m
+  [1m[35m (92.2ms)[0m  [1m[35mCREATE TABLE "flashcard_sets" ("id" bigserial primary key, "language_id" bigint NOT NULL, "completed" boolean DEFAULT FALSE NOT NULL, "review_count" integer DEFAULT 0 NOT NULL, "card_type" character varying, "title" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (17.5ms)[0m  [1m[35mCREATE INDEX "index_flashcard_sets_on_language_id" ON "flashcard_sets" ("language_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "flashcards" CASCADE[0m
+  [1m[35m (8.5ms)[0m  [1m[35mCREATE TABLE "flashcards" ("id" bigserial primary key, "flashcard_set_id" bigint NOT NULL, "front" character varying, "back" jsonb, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE INDEX "index_flashcards_on_flashcard_set_id" ON "flashcards" ("flashcard_set_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "languages" CASCADE[0m
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE "languages" ("id" bigserial primary key, "language" character varying)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobility_string_translations" CASCADE[0m
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE "mobility_string_translations" ("id" bigserial primary key, "locale" character varying NOT NULL, "key" character varying NOT NULL, "value" character varying, "translatable_type" character varying, "translatable_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE INDEX "index_mobility_string_translations_on_translatable_attribute" ON "mobility_string_translations" ("translatable_id", "translatable_type", "key")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobility_string_translations_on_keys" ON "mobility_string_translations" ("translatable_id", "translatable_type", "locale", "key")[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE INDEX "index_mobility_string_translations_on_query_keys" ON "mobility_string_translations" ("translatable_type", "key", "value", "locale")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobility_text_translations" CASCADE[0m
+  [1m[35m (2.0ms)[0m  [1m[35mCREATE TABLE "mobility_text_translations" ("id" bigserial primary key, "locale" character varying NOT NULL, "key" character varying NOT NULL, "value" text, "translatable_type" character varying, "translatable_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE INDEX "index_mobility_text_translations_on_translatable_attribute" ON "mobility_text_translations" ("translatable_id", "translatable_type", "key")[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobility_text_translations_on_keys" ON "mobility_text_translations" ("translatable_id", "translatable_type", "locale", "key")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "userlangs" CASCADE[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "userlangs" ("id" bigserial primary key, "user_id" bigint NOT NULL, "language_id" bigint NOT NULL, "learning" boolean DEFAULT TRUE)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE INDEX "index_userlangs_on_language_id" ON "userlangs" ("language_id")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE INDEX "index_userlangs_on_user_id" ON "userlangs" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "provider" character varying DEFAULT 'email' NOT NULL, "uid" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp(6), "allow_password_change" boolean DEFAULT FALSE, "remember_created_at" timestamp(6), "confirmation_token" character varying, "confirmed_at" timestamp(6), "confirmation_sent_at" timestamp(6), "email" character varying, "lang_code" character varying, "tokens" json, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_confirmation_token" ON "users" ("confirmation_token")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_uid_and_provider" ON "users" ("uid", "provider")[0m
+  [1m[35m (8.2ms)[0m  [1m[35mALTER TABLE "flashcard_sets" ADD CONSTRAINT "fk_rails_dea8b4402e"
+FOREIGN KEY ("language_id")
+  REFERENCES "languages" ("id")
+[0m
+  [1m[35m (0.9ms)[0m  [1m[35mALTER TABLE "flashcards" ADD CONSTRAINT "fk_rails_2030aabf31"
+FOREIGN KEY ("flashcard_set_id")
+  REFERENCES "flashcard_sets" ("id")
+[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "userlangs" ADD CONSTRAINT "fk_rails_7bd0bde5da"
+FOREIGN KEY ("language_id")
+  REFERENCES "languages" ("id")
+[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "userlangs" ADD CONSTRAINT "fk_rails_290b2e4f16"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (1.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20230403052736)[0m
+  [1m[35m (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20230322142045),
+(20230401065848),
+(20230401070526),
+(20230401074510),
+(20230401082404),
+(20230403052735);
+
+[0m
+  [1m[35m (1.8ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.5ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2023-04-29 23:36:56.343199"], ["updated_at", "2023-04-29 23:36:56.343199"]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "c16743ff394d866a917283497372b5b2498a02b3"], ["created_at", "2023-04-29 23:36:56.350181"], ["updated_at", "2023-04-29 23:36:56.350181"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (5.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (51.6ms)[0m  [1m[35mDROP DATABASE IF EXISTS "react_rails_api_project_template_test"[0m
+  [1m[35m (180.0ms)[0m  [1m[35mCREATE DATABASE "react_rails_api_project_template_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "flashcard_sets" CASCADE[0m
+  [1m[35m (5.2ms)[0m  [1m[35mCREATE TABLE "flashcard_sets" ("id" bigserial primary key, "language_id" bigint NOT NULL, "completed" boolean DEFAULT FALSE NOT NULL, "review_count" integer DEFAULT 0 NOT NULL, "card_type" character varying, "title" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE INDEX "index_flashcard_sets_on_language_id" ON "flashcard_sets" ("language_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "flashcards" CASCADE[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE TABLE "flashcards" ("id" bigserial primary key, "flashcard_set_id" bigint NOT NULL, "front" character varying, "back" jsonb, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE INDEX "index_flashcards_on_flashcard_set_id" ON "flashcards" ("flashcard_set_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "languages" CASCADE[0m
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE "languages" ("id" bigserial primary key, "language" character varying)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobility_string_translations" CASCADE[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE TABLE "mobility_string_translations" ("id" bigserial primary key, "locale" character varying NOT NULL, "key" character varying NOT NULL, "value" character varying, "translatable_type" character varying, "translatable_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE INDEX "index_mobility_string_translations_on_translatable_attribute" ON "mobility_string_translations" ("translatable_id", "translatable_type", "key")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobility_string_translations_on_keys" ON "mobility_string_translations" ("translatable_id", "translatable_type", "locale", "key")[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE INDEX "index_mobility_string_translations_on_query_keys" ON "mobility_string_translations" ("translatable_type", "key", "value", "locale")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "mobility_text_translations" CASCADE[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE TABLE "mobility_text_translations" ("id" bigserial primary key, "locale" character varying NOT NULL, "key" character varying NOT NULL, "value" text, "translatable_type" character varying, "translatable_id" bigint, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE INDEX "index_mobility_text_translations_on_translatable_attribute" ON "mobility_text_translations" ("translatable_id", "translatable_type", "key")[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_mobility_text_translations_on_keys" ON "mobility_text_translations" ("translatable_id", "translatable_type", "locale", "key")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "userlangs" CASCADE[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "userlangs" ("id" bigserial primary key, "user_id" bigint NOT NULL, "language_id" bigint NOT NULL, "learning" boolean DEFAULT TRUE)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE INDEX "index_userlangs_on_language_id" ON "userlangs" ("language_id")[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE INDEX "index_userlangs_on_user_id" ON "userlangs" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (1.8ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "provider" character varying DEFAULT 'email' NOT NULL, "uid" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp(6), "allow_password_change" boolean DEFAULT FALSE, "remember_created_at" timestamp(6), "confirmation_token" character varying, "confirmed_at" timestamp(6), "confirmation_sent_at" timestamp(6), "email" character varying, "lang_code" character varying, "is_admin" boolean DEFAULT FALSE, "tokens" json, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_confirmation_token" ON "users" ("confirmation_token")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_uid_and_provider" ON "users" ("uid", "provider")[0m
+  [1m[35m (1.6ms)[0m  [1m[35mALTER TABLE "flashcard_sets" ADD CONSTRAINT "fk_rails_dea8b4402e"
+FOREIGN KEY ("language_id")
+  REFERENCES "languages" ("id")
+[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "flashcards" ADD CONSTRAINT "fk_rails_2030aabf31"
+FOREIGN KEY ("flashcard_set_id")
+  REFERENCES "flashcard_sets" ("id")
+[0m
+  [1m[35m (5.7ms)[0m  [1m[35mALTER TABLE "userlangs" ADD CONSTRAINT "fk_rails_7bd0bde5da"
+FOREIGN KEY ("language_id")
+  REFERENCES "languages" ("id")
+[0m
+  [1m[35m (2.1ms)[0m  [1m[35mALTER TABLE "userlangs" ADD CONSTRAINT "fk_rails_290b2e4f16"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (2.4ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (5.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20230403052736)[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20230322142045),
+(20230401065848),
+(20230401070526),
+(20230401074510),
+(20230401082404),
+(20230403052735);
+
+[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "test"], ["created_at", "2023-05-08 21:02:06.439044"], ["updated_at", "2023-05-08 21:02:06.439044"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "c91f60692fc5374a40bcfb26cd537a523610c2e8"], ["created_at", "2023-05-08 21:02:06.442446"], ["updated_at", "2023-05-08 21:02:06.442446"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (2.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Pluck (1.0ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::SchemaMigration Pluck (1.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

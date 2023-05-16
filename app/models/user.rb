@@ -10,5 +10,5 @@ class User < ActiveRecord::Base
 
 
   has_many :userlangs
-  has_many :languages, through: :user_langs
+  has_many :languages, through: :userlangs
 end

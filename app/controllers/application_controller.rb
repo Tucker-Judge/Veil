@@ -7,6 +7,8 @@ class ApplicationController < ActionController::API
   
   before_action :configure_permitted_parameters, if: :devise_controller?
   # before_action :set_locale
+  # skip_before_action :set_locale, only: :create, if: :devise_controller?
+
         
   protected
       
@@ -19,7 +21,7 @@ class ApplicationController < ActionController::API
   end
 
   def set_locale
-    I18n.locale = @current_user.lang_code[0,2] || I18n.default_locale
+    I18n.locale = current_user.lang_code[0,2] || I18n.default_locale
   end
 
   def extract_locale_from_params

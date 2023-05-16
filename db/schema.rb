@@ -84,6 +84,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_052736) do
     t.datetime "confirmation_sent_at"
     t.string "email"
     t.string "lang_code"
+    t.boolean "is_admin", default: false
     t.json "tokens"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
