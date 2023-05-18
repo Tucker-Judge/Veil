@@ -19,4 +19,8 @@ Rails.application.routes.draw do
 
   # content management system
   post "/vocab", to: "cms#vocab"
+
+  # book uploader
+  post "/upload", to: "book#upload"
+  post "/test", to: "book#create"
 end

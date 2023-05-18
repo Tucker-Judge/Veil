@@ -10,18 +10,19 @@ class CmsController < ApplicationController
         
         if params[:card_type] === "Common Words"
             # grab last with common
-            last = FlashcardSet.where(card_type: "Common Words").last
+            last = FlashcardSet.where(language_id: language.id, card_type: "Common Words").last
             real_last = last.title
-            last = last.title.split(" ").last
-            # divide num by 10 and + it to set_index
-            for n in params[:back_arr]
+            last_title = last.title.split(" ").last.to_I()
 
-                front = params[:front_arr]
+            
+            # divide num by 10 and + it to set_index
+            front = params[:front_arr]
+            for n in params[:back_arr]
                 params[:back_arr].each_with_index do |back_arr, set_index| 
                     params[:translations].each do |locale|
                         Mobility.with_locale(locale) do |locale|
-                            flashcard_set_check = Mobility.with_locale() {FlashcardSet.find_by(language_id: language, card_type: "Common Words")}
-                    flashcard_set = FlashcardSet.create(language_id: language, card_type: "Common Words", title: "#{real_last}")
+                            flashcard_set_check = FlashcardSet.find_by(language_id: language, card_type: "Common Words")
+                    flashcard_set = FlashcardSet.create(language_id: language, card_type: "Common Words", title: "#{real_last + 10}")
                     back_arr.each_with_index do |back_card, card_index| 
                         front_card = front.shift
                         if front_card.present?  && back_card.present?
