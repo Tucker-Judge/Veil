@@ -32,6 +32,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_052736) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["flashcard_set_id"], name: "index_flashcards_on_flashcard_set_id"
+    # index front for files
   end
 
   create_table "languages", force: :cascade do |t|

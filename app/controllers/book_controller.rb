@@ -1,7 +1,7 @@
 class BookController < ApplicationController
   def create
     uploaded_io = params[:file]
-
+    locale =  params[:locale]
     # Save the uploaded file to a temp file
     temp_file = Tempfile.new(['document', '.pdf'])
     temp_file.binmode
@@ -17,13 +17,14 @@ class BookController < ApplicationController
     # Split the text into an array of words
     words = text.split(/\s+|\n/)
 
-    # Your list of words to compare with
-    list = ["le", "Le", "maison","est" "un", "des"] # you might load this from a file or a database
-
+    # list = ["le", "Le", "maison","est" "un", "des"]
+    language = Language.find(3)
+    sets = language.flashcard_sets
+    list = sets.flat_map {|set| set.flashcards.map(&:front)}
+    puts list.take(20)
     # Find words in the text that are not in the list
     words_not_in_list = words - list
 
-    # Count occurrences of each word not in the list
     if words_not_in_list
       word_counts = words_not_in_list.each_with_object(Hash.new(0)) do |word, counts|
         cleaned_word = word.gsub(/[^\p{Alpha}']/, '') # removes non-letter characters

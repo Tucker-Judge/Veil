@@ -7,7 +7,7 @@ class CmsController < ApplicationController
 
         # check if the language already exists and if it should be edited
         language = Language.find_by(params[:language])
-        
+        original_locale = I18n.locale
         if params[:card_type] === "Common Words"
             # grab last with common
             last = FlashcardSet.where(language_id: language.id, card_type: "Common Words").last
@@ -20,19 +20,33 @@ class CmsController < ApplicationController
             for n in params[:back_arr]
                 params[:back_arr].each_with_index do |back_arr, set_index| 
                     params[:translations].each do |locale|
-                        Mobility.with_locale(locale) do |locale|
+                        I18n.with_locale(locale.to_sym) do
+                            # 
                             flashcard_set_check = FlashcardSet.find_by(language_id: language, card_type: "Common Words")
-                    flashcard_set = FlashcardSet.create(language_id: language, card_type: "Common Words", title: "#{real_last + 10}")
-                    back_arr.each_with_index do |back_card, card_index| 
-                        front_card = front.shift
-                        if front_card.present?  && back_card.present?
-                            Flashcard.create(flashcard_set_id: flashcard_set.id, front: front_card, back: back_card)
+                            # i18n scope check flashcard_set_check
+                            if flashcard_set_check.exists?
+                                flashcard_set_check.title = "Some way of setting language values"
+                                # card_type
+                                flashcard_set_check.flashcards.each do |flashcard, card_index|
+                                    flashcard.back = back_arr.shift
+                                end
+                            else 
+                                # card_type becomes params[:card_type] to set proper language values
+                                flashcard_set = FlashcardSet.create(language_id: language, card_type: "Common Words", title: "#{real_last + 10}")
+                            # if it exists then stop else 
+                            end
+                            back_arr.each_with_index do |back_card, card_index| 
+                                front_card = front.shift
+                                    if front_card.present?  && back_card.present?
+                                        Flashcard.create(flashcard_set_id: flashcard_set.id, front: front_card, back: back_card)
+                                    end
+                            end
+                        puts flashcard_set
                         end
                     end
-                    puts flashcard_set
+                render json: { status: :created, message: 'alexa play sicko mode'}
                 end
             end
-            render json: { status: :created, message: 'alexa play sicko mode'}
         else 
             params[:back_arr].each_with_index do |sub,i|
                 front = params[:front_arr]
