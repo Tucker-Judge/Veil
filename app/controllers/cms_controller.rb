@@ -5,17 +5,9 @@ class CmsController < ApplicationController
         # handle unfinished content
         # handle user error
 
-        # check if the language already exists and if it should be edited
         language = Language.find_by(params[:language])
-        original_locale = I18n.locale
         if params[:card_type] === "Common Words"
-            # grab last with common
-            last = FlashcardSet.where(language_id: language.id, card_type: "Common Words").last
-            real_last = last.title
-            last_title = last.title.split(" ").last.to_I()
 
-            
-            # divide num by 10 and + it to set_index
             front = params[:front_arr]
             for n in params[:back_arr]
                 params[:back_arr].each_with_index do |back_arr, set_index| 
@@ -48,15 +40,20 @@ class CmsController < ApplicationController
                 end
             end
         else 
+            # I cant wait to do this all day
             params[:back_arr].each_with_index do |sub,i|
                 front = params[:front_arr]
                 set = FlashcardSet.create(language_id: language.id, card_type: params[:card_type], title: params[:title])
-                # 10.times do ||
                 sub.each |n| do 
                     front_card = front.shift
                     back_card = params[:back_arr][i].shift
                     break unless front_card.present? && back_card.present?
-                    Flashcard.create(flashcard_set_id: set.id, front: front_card, back: back_card)
+                    if flashcard.find_by(front: front_card).exists?
+                        I18n.with_locale(params[:translations].shift.to_sym) {card.back = back_card}
+                    else
+                        card = Flashcard.create(flashcard_set_id: set.id, front: front_card)
+                        I18n.with_locale(params[:translations].shift.to_sym) {card.back = back_card}
+                    end
                 end
             end
             render json: set

@@ -21,8 +21,13 @@ class BookController < ApplicationController
     language = Language.find(3)
     sets = language.flashcard_sets
     list = sets.flat_map {|set| set.flashcards.map(&:front)}
-    puts list.take(20)
+
+    completed_sets = FlashcardSets.where(language: language, completed: true)
+    completed_list = completed_sets.flat_map {|set| set.flashcards.map(&:front)}.
+
     # Find words in the text that are not in the list
+
+    # all common words not in list
     words_not_in_list = words - list
 
     if words_not_in_list
