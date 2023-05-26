@@ -8,7 +8,7 @@ class ApplicationController < ActionController::API
   before_action :configure_permitted_parameters, if: :devise_controller?
   # before_action :set_locale
   # skip_before_action :set_locale, only: :create, if: :devise_controller?
-
+  # before_action :authenticate_user!
         
   protected
       

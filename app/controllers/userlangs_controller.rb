@@ -1,5 +1,5 @@
 class UserlangsController < ApplicationController
-
+  # before_action :authenticate_user!
     def index
         languages = current_user.languages
         if languages
